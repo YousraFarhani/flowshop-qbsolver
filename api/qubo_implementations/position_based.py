@@ -9,7 +9,7 @@ def solve_with_position_based_qubo(job_matrix, params):
     pik = job_matrix.processing_times
 
     # Initialize model
-    model = Model(api_key="f82cdb04-2a22-4d57-8cdc-2b21bda85020")
+    model = Model(api_key="Your API Key")
     x_vars = model.add_variable_vector(name="x_vars", size=n * n, vtype=Vtype.BINARY)
 
     # Objective function
