@@ -63,7 +63,7 @@ def solve_with_stinson_smith_2_qubo(job_matrix, params):
     W, b, CW, CB = create_qubo(d5, n)
 
     # Setup TitanQ Model
-    model = Model(api_key="f82cdb04-2a22-4d57-8cdc-2b21bda85020")
+    model = Model(api_key="Your API Key")
     model.add_variable_vector("x", size=n*n, vtype=Vtype.BINARY)
     model.set_objective_matrices(0.5*(W+W.T), b, Target.MINIMIZE)
     model.add_inequality_constraints_matrix(CW, CB)
