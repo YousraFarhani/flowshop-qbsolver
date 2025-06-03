@@ -64,7 +64,7 @@ def solve_with_mocellin_qubo(job_matrix, params):
     d4 = [[UBX(m, i, j, pik, {}) for j in range(n)] for i in range(n)]
 
     # Initialize model
-    model = Model(api_key="f82cdb04-2a22-4d57-8cdc-2b21bda85020")
+    model = Model(api_key="Your API Key")
 
     # Create QUBO matrices
     W, b, CW, CB = create_qubo(d4, n)
