@@ -84,7 +84,7 @@ def solve_with_infinityq(explicit_qubo, n, params):
                 weights[j, i] = explicit_qubo[i, j]
     
     # Setup TitanQ Model
-    model = Model(api_key="f82cdb04-2a22-4d57-8cdc-2b21bda85020")
+    model = Model(api_key="Your API Key")
     x_vars = model.add_variable_vector(name="x_vars", size=n**2, vtype=Vtype.BINARY)
     model.set_objective_matrices(weights, bias, target=Target.MINIMIZE)
     
