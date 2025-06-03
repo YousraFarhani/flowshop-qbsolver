@@ -1,0 +1,170 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 215 20.2% 65.1%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Updated dark blue background instead of very dark gray */
+    --background: 215 50% 15%;
+    --foreground: 213 31% 91%;
+
+    /* Slightly lighter muted blue */
+    --muted: 215 40% 20%;
+    --muted-foreground: 215.4 16.3% 70%;
+
+    /* More blue-toned accent */
+    --accent: 215 40% 25%;
+    --accent-foreground: 210 40% 98%;
+
+    /* Blue-toned popover */
+    --popover: 215 50% 15%;
+    --popover-foreground: 215 20.2% 85%;
+
+    /* Lighter blue borders */
+    --border: 215 40% 25%;
+    --input: 215 40% 25%;
+
+    /* Card with blue tone */
+    --card: 215 50% 15%;
+    --card-foreground: 213 31% 91%;
+
+    /* Keep primary color as is */
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 1.2%;
+
+    /* Slightly lighter secondary */
+    --secondary: 215 40% 20%;
+    --secondary-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 215 40% 25%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer utilities {
+  .text-gradient-quantum {
+    @apply bg-gradient-to-r from-quantum-indigo to-quantum-cyan bg-clip-text text-transparent;
+  }
+  
+  .bg-gradient-quantum {
+    @apply bg-gradient-to-r from-quantum-indigo to-quantum-cyan;
+  }
+  
+  .shadow-glow {
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+  }
+  
+  .quantum-card {
+    @apply border border-quantum-indigo/20 bg-gradient-to-br from-background to-quantum-indigo/5 backdrop-blur-sm;
+  }
+}
+
+/* Custom quantum circuit animations */
+.quantum-circuit {
+  position: relative;
+  overflow: hidden;
+}
+
+.quantum-circuit::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 300%;
+  height: 100%;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 20px,
+    rgba(99, 102, 241, 0.1) 20px,
+    rgba(99, 102, 241, 0.1) 40px
+  ),
+  repeating-linear-gradient(
+    180deg,
+    transparent,
+    transparent 20px,
+    rgba(99, 102, 241, 0.1) 20px,
+    rgba(99, 102, 241, 0.1) 40px
+  );
+  animation: slide 30s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes slide {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-200px, 0);
+  }
+}
+
+/* Animations for qubit particles */
+.qubit {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.8) 0%, rgba(99, 102, 241, 0) 70%);
+  filter: blur(1px);
+  animation: pulse-glow 2s infinite ease-in-out;
+}
+
+.qubit::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30%;
+  height: 30%;
+  background-color: white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}

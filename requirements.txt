@@ -1,0 +1,11 @@
+fastapi==0.104.0
+uvicorn==0.23.2
+numpy==1.26.0
+python-multipart==0.0.6
+mangum==0.17.0
+scipy
+dimod
+autoqubo
+titanq==0.36.0
+gunicorn
+dwave-qbsolv==0.3.4

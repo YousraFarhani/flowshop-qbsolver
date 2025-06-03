@@ -1,0 +1,28 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[functions]
+  # No python_version needed - it's auto-detected
+
+# Direct API endpoint to the solve_qubo function
+[[redirects]]
+  from = "/api/solve_qubo"
+  to = "/.netlify/functions/solve_qubo"
+  status = 200
+  force = true
+
+# SPA fallback
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[dev]
+  command = "npm run dev"
+  port = 8088
+  targetPort = 8080
+
+[[plugins]]
+  package = "@netlify/plugin-functions-install-core"

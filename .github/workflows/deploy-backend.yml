@@ -1,0 +1,96 @@
+name: Deploy Backend to AWS Lambda
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'api/**'
+      - 'requirements.txt'
+  workflow_dispatch:
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install aws-sam-cli
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Package and deploy with SAM
+        run: |
+          # Create SAM template.yaml if it doesn't exist
+          [ ! -f template.yaml ] && cat > template.yaml << EOF
+          AWSTemplateFormatVersion: '2010-09-09'
+          Transform: AWS::Serverless-2016-10-31
+          Resources:
+            QuantumFlowshopAPI:
+              Type: AWS::Serverless::Function
+              Properties:
+                CodeUri: ./
+                Handler: api/lambda_handler.handler
+                Runtime: python3.9
+                Timeout: 30
+                MemorySize: 512
+                Events:
+                  ApiEvent:
+                    Type: Api
+                    Properties:
+                      Path: /{proxy+}
+                      Method: ANY
+          Outputs:
+            ApiEndpoint:
+              Description: API Gateway endpoint URL
+              Value: !Sub https://\${ServerlessRestApi}.execute-api.\${AWS::Region}.amazonaws.com/Prod/
+          EOF
+
+          # Create lambda handler
+          mkdir -p api
+          cat > api/lambda_handler.py << EOF
+          from mangum import Mangum
+          import sys
+          import os
+
+          # Add the API directory to the Python path
+          sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+          # Import your FastAPI app
+          from api.solve_qubo import app
+
+          # Add CORS headers
+          from fastapi.middleware.cors import CORSMiddleware
+          app.add_middleware(
+              CORSMiddleware,
+              allow_origins=["https://yourusername.github.io"],
+              allow_credentials=True,
+              allow_methods=["*"],
+              allow_headers=["*"],
+          )
+
+          # Create handler for AWS Lambda
+          handler = Mangum(app)
+          EOF
+
+          # Deploy with SAM
+          sam build
+          sam deploy --stack-name quantum-flowshop-api --capabilities CAPABILITY_IAM --no-confirm-changeset
+
+          # Output the API endpoint
+          API_ENDPOINT=$(aws cloudformation describe-stacks --stack-name quantum-flowshop-api --query "Stacks[0].Outputs[?OutputKey=='ApiEndpoint'].OutputValue" --output text)
+          echo "::set-output name=api_endpoint::$API_ENDPOINT"
+          echo "API Endpoint: $API_ENDPOINT"

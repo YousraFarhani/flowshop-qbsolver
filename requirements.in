@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+pydantic
+python-multipart
+mangum
+numpy
+scipy
+autoqubo
+dimod
+dwave-qbsolv
+autoqubo
+pandas
+plotly
+yfinance
+sympy
+gunicorn
